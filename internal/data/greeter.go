@@ -6,11 +6,13 @@ import (
 	"kratos-poc/internal/biz"
 
 	"github.com/go-kratos/kratos/v2/log"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type greeterRepo struct {
 	data *Data
 	log  *log.Helper
+  collection *mongo.Collection
 }
 
 // NewGreeterRepo .
@@ -18,10 +20,16 @@ func NewGreeterRepo(data *Data, logger log.Logger) biz.GreeterRepo {
 	return &greeterRepo{
 		data: data,
 		log:  log.NewHelper(logger),
+    collection: data.database.Collection("greeter"),
 	}
 }
 
 func (r *greeterRepo) Save(ctx context.Context, g *biz.Greeter) (*biz.Greeter, error) {
+  res, err := r.collection.InsertOne(ctx, g)
+  if err != nil {
+    log.Fatal(err)
+  }
+  log.Info(res.InsertedID)
 	return g, nil
 }
 

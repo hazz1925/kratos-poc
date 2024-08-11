@@ -16,7 +16,8 @@ var (
 
 // Greeter is a Greeter model.
 type Greeter struct {
-	Hello string
+  Model
+  Hello string `bson:"hello"`
 }
 
 // GreeterRepo is a Greater repo.
