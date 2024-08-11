@@ -2,10 +2,12 @@ package data
 
 import (
 	"context"
+	"time"
 
 	"kratos-poc/internal/biz"
 
 	"github.com/go-kratos/kratos/v2/log"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -25,10 +27,13 @@ func NewGreeterRepo(data *Data, logger log.Logger) biz.GreeterRepo {
 }
 
 func (r *greeterRepo) Save(ctx context.Context, g *biz.Greeter) (*biz.Greeter, error) {
+  g.CreatedAt = time.Now()
+  g.UpdatedAt = time.Now()
   res, err := r.collection.InsertOne(ctx, g)
   if err != nil {
     log.Fatal(err)
   }
+  g.ID = res.InsertedID.(primitive.ObjectID)
   log.Info(res.InsertedID)
 	return g, nil
 }

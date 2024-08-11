@@ -16,7 +16,7 @@ var (
 
 // Greeter is a Greeter model.
 type Greeter struct {
-  Model
+  Model        `bson:",inline"`
   Hello string `bson:"hello"`
 }
 
